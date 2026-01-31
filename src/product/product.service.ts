@@ -11,16 +11,20 @@ export class ProductService {
         private readonly repository: Repository<Product>
     ) {}
 
-    public getProductList(): string[] {
-        return ['Product 1', 'Product 2', 'Product 3']
+    public async getProductList(): Promise<Product[]> {
+        return await this.repository.find();
     }
 
-    public createProduct(data: CreateProductDto): object {
-        return {
-            name: data.name,
-            price: data.price,
-            description: data.description,
-            stock: data.stock,
-        };
+    public async getProductById(id: number): Promise<Product | null> {
+        return await this.repository.findOne({
+            where: {
+                id
+            }
+        })
+    }
+
+    public async createProduct(data: CreateProductDto): Promise<Product> {
+        const product = this.repository.create(data);
+        return await this.repository.save(product);
     }
 }
