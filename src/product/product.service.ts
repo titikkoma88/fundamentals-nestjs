@@ -17,11 +17,16 @@ export class ProductService {
     }
 
     public async getProductById(id: number): Promise<Product | null> {
-        return await this.repository.findOne({
+        const product = await this.repository.findOne({
             where: {
                 id
             }
         })
+        if (!product) {
+            throw new NotFoundException('Product not found  ')
+        }
+
+        return product
     }
 
     public async createProduct(data: CreateProductDto): Promise<Product> {
